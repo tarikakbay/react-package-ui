@@ -41,7 +41,8 @@ pnpm build        # tsup: ESM + CJS + .d.ts
 pnpm typecheck
 pnpm test         # vitest (core: şema, ui-web: bileşen + form)
 pnpm changeset    # değişiklik kaydı
-pnpm --filter @cx/storybook storybook   # Storybook: http://localhost:6006 (tema ve dil seçici üst çubukta)
+pnpm storybook    # Storybook: http://localhost:6006 (tema ve dil seçici üst çubukta)
+pnpm build-storybook  # statik çıktı: apps/storybook/storybook-static
 ```
 
 ## Kullanım
