@@ -1,0 +1,57 @@
+# Storybook'u Firebase Hosting'e yayımlar.
+# - main'e push → canlı site (live kanal)
+# - Pull request → PR'a özel önizleme linki (7 gün geçerli), link PR'a yorum olarak yazılır
+#
+# Gerekli ayarlar (repo → Settings → Secrets and variables → Actions):
+#   Variables: FIREBASE_PROJECT_ID          Firebase proje kimliği
+#   Secrets:   FIREBASE_SERVICE_ACCOUNT     Firebase Hosting yetkili servis hesabı JSON anahtarı
+name: Storybook
+
+on:
+  push:
+    branches: [main]
+    paths: ['packages/**', 'apps/storybook/**', 'firebase.json', 'pnpm-lock.yaml', '.github/workflows/storybook-deploy.yml']
+  pull_request:
+    paths: ['packages/**', 'apps/storybook/**', 'firebase.json', 'pnpm-lock.yaml']
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+concurrency:
+  group: storybook-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    # Fork'tan gelen PR'larda secret erişimi olmadığı için çalışmaz.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build-storybook
+        env:
+          STORYBOOK_DISABLE_TELEMETRY: 1
+
+      - name: Firebase Hosting (önizleme)
+        if: github.event_name == 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          expires: 7d
+
+      - name: Firebase Hosting (canlı)
+        if: github.event_name == 'push'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live

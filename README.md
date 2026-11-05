@@ -45,6 +45,16 @@ pnpm storybook    # Storybook: http://localhost:6006 (tema ve dil seçici üst �
 pnpm build-storybook  # statik çıktı: apps/storybook/storybook-static
 ```
 
+## Storybook yayını (Firebase Hosting)
+
+`.github/workflows/storybook-deploy.yml`: `main`'e push'ta canlı siteye, her PR'da PR'a özel önizleme linkine yayımlar (link PR'a yorum olarak düşer).
+Repo ayarlarında (Settings → Secrets and variables → Actions) gerekenler:
+
+| Tür | Ad | Değer |
+|---|---|---|
+| Variable | `FIREBASE_PROJECT_ID` | Firebase proje kimliği |
+| Secret | `FIREBASE_SERVICE_ACCOUNT` | Firebase Hosting yetkili servis hesabının JSON anahtarı |
+
 ## Kullanım
 
 ### 1. i18n (uygulamada bir kez)
