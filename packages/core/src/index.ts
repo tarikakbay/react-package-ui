@@ -5,11 +5,21 @@ export type {
   CxFieldComponentProps,
   CxFieldHandle,
   Option,
-  TextFieldKind,
-  TextFieldProps,
-  TextFieldRules,
   TextTransform,
 } from './types/fields';
+
+// Alan tipleri (her tip kendi klasöründe: fields/<tip>)
+export {
+  applyInputTransform,
+  applyValueTransform,
+  isValidEmail,
+  isValidPhone,
+  normalizePhone,
+  textSchema,
+  type TextFieldKind,
+  type TextFieldProps,
+  type TextFieldRules,
+} from './fields/text';
 
 // Form motoru (bileşen tabanlı)
 export {
@@ -42,19 +52,12 @@ export {
   buildSchema,
   isEmptyValue,
   requiredOnlySchema,
-  textSchema,
+  validationMessage,
   type FieldSchemaFactory,
   type SchemaContext,
   type SchemaField,
 } from './form/schema';
 export { resolveColSpan, spanAt, type ResolvedColSpan } from './form/layout';
-export {
-  applyInputTransform,
-  applyValueTransform,
-  isValidEmail,
-  isValidPhone,
-  normalizePhone,
-} from './form/text';
 
 // Sunucu alan hataları
 export { applyFieldErrors, FieldError, isFieldError } from './errors/fieldError';

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Translate } from '../i18n/resources';
 import { resolveColSpan, spanAt } from './layout';
-import { buildSchema, requiredOnlySchema, textSchema, type SchemaField } from './schema';
+import { textSchema } from '../fields/text';
+import { buildSchema, requiredOnlySchema, type SchemaField } from './schema';
 
 // Mesaj anahtarını ve parametreleri görünür kılan sahte çeviri
 const t: Translate = (key, params) => `${key}${params ? ' ' + JSON.stringify(params) : ''}`;

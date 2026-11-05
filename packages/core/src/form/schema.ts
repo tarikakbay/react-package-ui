@@ -1,7 +1,5 @@
 import { z } from 'zod';
 import { CX_NAMESPACE, type Translate } from '../i18n/resources';
-import type { TextFieldRules } from '../types/fields';
-import { applyValueTransform, isValidEmail, isValidPhone } from './text';
 
 export type SchemaContext = {
   /** Hata mesajları için çeviri fonksiyonu (i18next `t`). */
@@ -15,40 +13,10 @@ export type SchemaContext = {
 /** Bir alanın Zod şemasını üreten fonksiyon. Alan kaydında tutulur. */
 export type FieldSchemaFactory = (ctx: SchemaContext) => z.ZodType;
 
-const msg = (t: Translate, key: string, params?: Record<string, unknown>) =>
+/** Validasyon mesajı (cx namespace). Alan şemaları da kullanır. */
+export const validationMessage = (t: Translate, key: string, params?: Record<string, unknown>) =>
   t(`${CX_NAMESPACE}:validation.${key}`, params);
-
-/**
- * Metin alanı şeması.
- * - Boş değer yalnızca `required` ise hatadır.
- * - Format kuralları (email, phone, uzunluk) yalnızca değer doluysa çalışır.
- * - Her kuralın kendi mesajı vardır.
- */
-export function textSchema(rules: TextFieldRules): FieldSchemaFactory {
-  return ({ t, locale, label, required }) =>
-    z
-      .string()
-      .transform((v) => applyValueTransform(v ?? '', rules.kind, rules.transform, locale))
-      .superRefine((v, ctx) => {
-        if (v.length === 0) {
-          if (required) ctx.addIssue({ code: 'custom', message: msg(t, 'required', { label }) });
-          return;
-        }
-        if (rules.minLength !== undefined && v.length < rules.minLength) {
-          ctx.addIssue({ code: 'custom', message: msg(t, 'minLength', { label, min: rules.minLength }) });
-        }
-        // Eski projedeki hata (length >= max) düzeltildi: tam max uzunluk geçerlidir.
-        if (rules.maxLength !== undefined && v.length > rules.maxLength) {
-          ctx.addIssue({ code: 'custom', message: msg(t, 'maxLength', { label, max: rules.maxLength }) });
-        }
-        if (rules.kind === 'email' && !isValidEmail(v)) {
-          ctx.addIssue({ code: 'custom', message: msg(t, 'email', { label }) });
-        }
-        if (rules.kind === 'phone' && !isValidPhone(v)) {
-          ctx.addIssue({ code: 'custom', message: msg(t, 'phone', { label }) });
-        }
-      });
-}
+const msg = validationMessage;
 
 /** Değer boş mu? (null, undefined, '', boş dizi) */
 export function isEmptyValue(v: unknown): boolean {

@@ -9,12 +9,29 @@ Web (MUI) ve React Native (Paper) için ortak input/form bileşenleri. Kararlar�
 
 ```
 packages/
-  core/        @cx/core       tipler, form motoru (useCxForm, connectField, şema üretici), FieldError, i18n, tema token'ları
-  ui-web/      @cx/ui-web     CxTextField, CxForm, CxFormSection, CxFormTabs, CxRow/CxCol, CxThemeProvider (MUI)
-  ui-native/   @cx/ui-native  aynı bileşenler + CxSubmitButton (React Native Paper)
-apps/storybook/                Storybook (web): alan ve form örnekleri, dark mode ve tr/en seçici
-docs/examples/                örnek ekran, business bileşeni, layout (henüz yazılmamış API'leri de gösterir)
+  core/src/
+    types/              ortak sözleşme: Option, ColSpan, BaseFieldProps, CxFieldComponentProps, CxFieldHandle
+    fields/text/        metin alanı: types, schema (Zod), transform
+    form/               form motoru: useCxForm, connectField, context, buildSchema, submit, layout (col)
+    errors/             FieldError
+    i18n/               tr/en kaynakları
+    theme/              token'lar (light/dark)
+  ui-web/src/           (MUI)
+    inputs/CxTextField/       CxTextField.tsx, types.ts, index.ts, CxTextField.test.tsx
+    forms/CxForm/             CxForm.tsx, types.ts, index.ts, CxForm.test.tsx
+    forms/CxFormSection/
+    forms/CxFormTabs/         CxFormTabs + CxFormTab, test
+    layout/CxRow/  layout/CxCol/
+    theme/CxThemeProvider/
+    base/connectField.ts      bileşeni forma bağlanabilir yapar
+    test/utils.tsx            test yardımcıları (i18n, tema, submit)
+  ui-native/src/        (React Native Paper) — aynı yapı + forms/CxSubmitButton/
+apps/storybook/         Storybook (web): alan ve form örnekleri, dark mode ve tr/en seçici
+docs/examples/          örnek ekran, business bileşeni, layout (henüz yazılmamış API'leri de gösterir)
 ```
+
+Her bileşen kendi klasöründe: `Bileşen.tsx` (uygulama), `types.ts` (props tipleri), `index.ts` (dışa aktarım), varsa `Bileşen.test.tsx`.
+Yeni bir alan eklerken: core'da `fields/<tip>/` (types, schema), ui paketlerinde `inputs/Cx<Ad>/`.
 
 ## Komutlar
 
