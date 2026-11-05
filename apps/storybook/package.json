@@ -1,0 +1,33 @@
+{
+  "name": "@cx/storybook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build": "storybook build -o storybook-static",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cx/core": "workspace:*",
+    "@cx/ui-web": "workspace:*"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.5.0",
+    "@storybook/addon-a11y": "^10.6.6",
+    "@storybook/react-vite": "^10.6.6",
+    "@types/react": "~19.2.0",
+    "@types/react-dom": "~19.2.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "i18next": "^26.7.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "^7.91.0",
+    "react-i18next": "^17.1.12",
+    "storybook": "^10.6.6",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.6",
+    "zod": "^4.6.7"
+  }
+}
